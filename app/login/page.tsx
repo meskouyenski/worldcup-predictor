@@ -6,21 +6,18 @@ import { supabase } from "../../lib/supabase";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
 
-  const SITE_URL =
-    "https://worldcup-predictor-vanstricker.vercel.app";
+  const redirectTo = "https://worldcup-predictor-vanstricker.vercel.app";
 
   useEffect(() => {
     checkUser();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        if (session) {
-          window.location.href = "/";
-        }
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        window.location.href = "/";
       }
-    );
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -46,7 +43,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: SITE_URL,
+        emailRedirectTo: redirectTo,
       },
     });
 
@@ -59,13 +56,12 @@ export default function LoginPage() {
   }
 
   async function signInGoogle() {
-    const { error } =
-      await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: SITE_URL,
-        },
-      });
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo,
+      },
+    });
 
     if (error) {
       alert(error.message);
@@ -75,7 +71,6 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-slate-100">
       <div className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md">
-
         <h1 className="text-4xl font-bold text-center mb-8 text-black">
           Connexion
         </h1>
@@ -105,7 +100,6 @@ export default function LoginPage() {
         >
           🔴 Continuer avec Google
         </button>
-
       </div>
     </main>
   );
