@@ -6,16 +6,21 @@ import { supabase } from "../../lib/supabase";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
 
+  const SITE_URL =
+    "https://worldcup-predictor-vanstricker.vercel.app";
+
   useEffect(() => {
     checkUser();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        window.location.href = "/";
+    } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (session) {
+          window.location.href = "/";
+        }
       }
-    });
+    );
 
     return () => {
       subscription.unsubscribe();
@@ -41,7 +46,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: "http://localhost:3000",
+        emailRedirectTo: SITE_URL,
       },
     });
 
@@ -54,12 +59,13 @@ export default function LoginPage() {
   }
 
   async function signInGoogle() {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: "http://localhost:3000",
-      },
-    });
+    const { error } =
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: SITE_URL,
+        },
+      });
 
     if (error) {
       alert(error.message);
