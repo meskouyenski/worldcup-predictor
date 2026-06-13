@@ -1,17 +1,11 @@
-"use client"; // garantit que le client fonctionne côté navigateur
+// lib/supabase.ts
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-import { createClient } from "@supabase/supabase-js";
+const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseAnonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
-// Récupère les variables d'environnement
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-// Vérifie que les variables existent
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    "Supabase URL ou clé introuvable. Vérifie ton fichier .env.local"
-  );
+  throw new Error("Les variables d'environnement Supabase sont manquantes !");
 }
 
-// Crée le client Supabase
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey);

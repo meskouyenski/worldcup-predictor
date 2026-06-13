@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import JoinLeagueButton from "@/components/JoinLeagueButton";
 
 export default function HomePage() {
   const [user, setUser] = useState<any>(null);
@@ -40,7 +41,10 @@ export default function HomePage() {
   async function createLeague() {
     if (!leagueName.trim()) return alert("Entre un nom de ligue");
 
-    const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const inviteCode = Math.random()
+      .toString(36)
+      .substring(2, 8)
+      .toUpperCase();
 
     const { data, error } = await supabase
       .from("leagues")
@@ -73,18 +77,23 @@ export default function HomePage() {
     window.location.href = "/login";
   }
 
-  if (loading) return (
-    <main className="min-h-screen flex items-center justify-center">
-      <h1 className="text-2xl font-bold text-black">Chargement...</h1>
-    </main>
-  );
+  if (loading)
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <h1 className="text-2xl font-bold text-black">Chargement...</h1>
+      </main>
+    );
 
   return (
     <main className="min-h-screen bg-slate-100">
+
+      {/* HEADER */}
       <header className="bg-blue-700 text-white p-6 shadow">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <div>
-            <h1 className="text-4xl font-bold">🏆 Pronostics Coupe du Monde 2026</h1>
+            <h1 className="text-4xl font-bold">
+              🏆 Pronostics Coupe du Monde 2026
+            </h1>
             <p className="mt-2">Connecté : {user.email}</p>
           </div>
 
@@ -97,9 +106,19 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* CONTENT */}
       <div className="max-w-5xl mx-auto p-8">
+
+        {/* 👉 JOIN LEAGUE BUTTON (AJOUT IMPORTANT) */}
+        <div className="mb-6">
+          <JoinLeagueButton />
+        </div>
+
+        {/* CREATE LEAGUE */}
         <div className="bg-white p-8 rounded-2xl shadow-lg mb-8">
-          <h2 className="text-3xl font-bold text-black mb-6">Créer une ligue</h2>
+          <h2 className="text-3xl font-bold text-black mb-6">
+            Créer une ligue
+          </h2>
 
           <input
             type="text"
@@ -117,8 +136,11 @@ export default function HomePage() {
           </button>
         </div>
 
+        {/* MY LEAGUES */}
         <div className="bg-white p-8 rounded-2xl shadow-lg">
-          <h2 className="text-3xl font-bold text-black mb-6">Mes ligues</h2>
+          <h2 className="text-3xl font-bold text-black mb-6">
+            Mes ligues
+          </h2>
 
           {leagues.length === 0 ? (
             <p className="text-gray-500">Aucune ligue créée.</p>
@@ -130,13 +152,21 @@ export default function HomePage() {
                   className="border rounded-lg p-4 flex justify-between items-center"
                 >
                   <div>
-                    <h3 className="font-bold text-xl text-black">{league.name}</h3>
-                    <p className="text-gray-500 text-sm">ID : {league.id}</p>
-                    <p className="text-gray-500 text-sm">Code : {league.invite_code}</p>
+                    <h3 className="font-bold text-xl text-black">
+                      {league.name}
+                    </h3>
+                    <p className="text-gray-500 text-sm">
+                      ID : {league.id}
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      Code : {league.invite_code}
+                    </p>
                   </div>
 
                   <button
-                    onClick={() => (window.location.href = `/league/${league.id}`)}
+                    onClick={() =>
+                      (window.location.href = `/league/${league.id}`)
+                    }
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg"
                   >
                     Ouvrir
@@ -146,6 +176,7 @@ export default function HomePage() {
             </div>
           )}
         </div>
+
       </div>
     </main>
   );
