@@ -13,28 +13,20 @@ export async function GET() {
 
     const json = await res.json();
 
-    if (!json.matches) {
-      return NextResponse.json({
-        success: false,
-        error: "No matches returned from API",
-      });
-    }
-
-    const matches = json.matches.map((m: any) => ({
+    const matches = (json.matches || []).map((m: any) => ({
       id: m.id,
       home_team: m.homeTeam?.name || "Unknown",
       away_team: m.awayTeam?.name || "Unknown",
       match_date: m.utcDate,
-      status: m.status, // IMPORTANT
+      status: m.status,
       score: {
-        home: m.score?.fullTime?.home ?? null,
-        away: m.score?.fullTime?.away ?? null,
+        home: m.score?.fullTime?.home,
+        away: m.score?.fullTime?.away,
       },
     }));
 
     return NextResponse.json({
       success: true,
-      count: matches.length,
       data: matches,
     });
   } catch (e: any) {
